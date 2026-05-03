@@ -4,10 +4,38 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../lib/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Shirt {
+  id           Int      @id @default(autoincrement())
+  name         String 
+  description  String?  @db.Text
+  price        Float
+  imageUrl     String
+  soldout      Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  clicks Click[]
+}
+
+model Click {
+  id Int @id @default(autoincrement())
+  shirtId Int
+  time DateTime @default(now())
+
+  shirt Shirt @relation(fields: [shirtId], references: [id], onDelete: Cascade)
+}
+
+model Admin {
+  id Int @id @default(autoincrement())
+  email String @unique
+  senha String
 }
