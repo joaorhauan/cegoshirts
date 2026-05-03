@@ -13,8 +13,9 @@ export const listShirts = async (req, res) => {
             orderBy: { createdAt: 'desc' },
         })
         res.json(shirts)
-    } catch {
-        res.status(500).json({ error: "Error listing shirts" })
+    } catch (err) {
+        console.error('ERRO:', err)
+        res.status(500).json({ error: 'Internal server error' })
     }
 } 
 
@@ -26,13 +27,14 @@ export const getShirt = async (req,res) => {
         })
         if (!shirt) return res.status(404).json({ error: "Shirt not found" })
         res.json(shirt)
-    } catch {
-        res.json(500).json({ error: "Error searching shirt"})
+    } catch (err) {
+        console.error('ERRO:', err)
+        res.status(500).json({ error: 'Internal server error' })
     }
 }
 
 export const createShirt = async (req,res) => {
-    const { name, description } = req.body
+    const { name, description, price } = req.body
 
     try {
         if (!req.file) return res.status(400).json({ error: "Image required"})
@@ -55,8 +57,9 @@ export const createShirt = async (req,res) => {
         })
 
         res.status(201).json(shirt)
-    } catch {
-        res.status(500).json({ error: "Error creating shirt"})
+    } catch (err) {
+        console.error('ERRO:', err)
+        res.status(500).json({ error: 'Internal server error' })
     }
 }
 
@@ -89,8 +92,9 @@ export const updateShirt = async (req,res) => {
        })
 
        res.json(shirt)
-    } catch {
-        res.status(500).json({ error: "Error updating shirt"})
+    } catch (err) {
+        console.error('ERRO:', err)
+        res.status(500).json({ error: 'Internal server error' })
     }
 }
 
@@ -99,7 +103,8 @@ export const deleteShirt = async (req,res) => {
     try {
         await prisma.shirt.delete({ where: { id: Number(id) } })
         res.json({ msg: "Shirt deleted"})
-    } catch {
-        res.status(500).json({ error: 'Error deleting shirt' })
+    } catch (err) {
+        console.error('ERRO:', err)
+        res.status(500).json({ error: 'Internal server error' })
     }
 }

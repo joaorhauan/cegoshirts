@@ -13,7 +13,7 @@ if (!email || !password) {
 }
 
 const hash = await bcrypt.hash(password, 10)
-await prisma.admin.create({ data: { email, senha:hash } })
+await prisma.admin.create({ data: { email, password:hash } })
 
 console.log('Created admin sucessfully')
 await prisma.$disconnect()

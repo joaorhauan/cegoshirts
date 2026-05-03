@@ -1,0 +1,9 @@
+{
+    "name": "cegoshirts",
+    "private": true,
+    "scripts": {
+        "backend": "cd backend && npm run dev",
+        "frontend": "cd frontend && npm run dev",
+        "dev": "npm run backend && npm run frontend"
+    }
+}
