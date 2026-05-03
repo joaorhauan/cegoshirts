@@ -74,7 +74,7 @@ export default function Vitrine({ shirts }) {
         </a>
       </div>
 
-      <footer className="footer">© 2025 Cego Shirts · Natal, RN</footer>
+      <footer className="footer">© 2026 Cego Shirts · Natal, RN</footer>
     </>
   )
 }
