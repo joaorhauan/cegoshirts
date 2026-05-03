@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 import prisma from '../lib/prisma.js'
 
 export const login = async (req,res) => {
+
     const { email, password } = req.body;
 
 
@@ -25,6 +26,7 @@ export const login = async (req,res) => {
 
         res.json({ token })
     } catch (err) {
-        res.status(500).json({ error: 'Server error'})
+        console.error('ERRO:', err)
+        res.status(500).json({ error: 'Internal server error' })
     }
 }

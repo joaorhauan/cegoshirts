@@ -1,7 +1,8 @@
 {
   "name": "mobile",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "expo-router/entry",
+  "scheme": "cegoshirts",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -10,13 +11,18 @@
     "reset": "expor start --clear"
   },
   "dependencies": {
-    "@react-native-async-storage/async-storage": "^3.0.2",
+    "@react-native-async-storage/async-storage": "2.2.0",
     "axios": "^1.16.0",
     "expo": "~54.0.33",
-    "expo-router": "^55.0.13",
+    "expo-constants": "~18.0.13",
+    "expo-image-picker": "~17.0.11",
+    "expo-linking": "~8.0.12",
+    "expo-router": "~6.0.23",
     "expo-status-bar": "~3.0.9",
     "react": "19.1.0",
-    "react-native": "0.81.5"
+    "react-native": "0.81.5",
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-screens": "~4.16.0"
   },
   "private": true
 }
