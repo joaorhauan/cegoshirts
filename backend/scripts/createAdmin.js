@@ -4,16 +4,32 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const email = process.env.ADMIN_EMAIL;
-const password = process.env.ADMIN_PASSWORD;
+const emailF = process.env.ADMIN_EMAIL_F;
+const passwordF = process.env.ADMIN_PASSWORD_F;
 
-if (!email || !password) { 
-    console.log('Define ADMIN_EMAIL and ADMIN_PASSWORD no .env')
+const emailS = process.env.ADMIN_EMAIL_S;
+const passwordS = process.env.ADMIN_PASSWORD_S;
+
+try {
+
+    if (!emailF || !passwordF || !emailS || !passwordS) { 
+        throw 'Define first and second ADMIN_EMAIL and ADMIN_PASSWORD in .env'
+        
+    }
+
+} catch(err) {
+
+    console.log(err)
     process.exit(1)
+
 }
 
-const hash = await bcrypt.hash(password, 10)
-await prisma.admin.create({ data: { email, password:hash } })
+
+const hashF = await bcrypt.hash(passwordF, 10)
+const hashS = await bcrypt.hash(passwordS, 10)
+
+await prisma.admin.create({ data: { emailF, password:hashF } })
+await prisma.admin.create({ data: { emailS, password:hashS } })
 
 console.log('Created admin sucessfully')
 await prisma.$disconnect()
