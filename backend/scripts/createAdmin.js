@@ -13,7 +13,7 @@ const passwordS = process.env.ADMIN_PASSWORD_S;
 try {
 
     if (!emailF || !passwordF || !emailS || !passwordS) { 
-        throw 'Define first and second ADMIN_EMAIL and ADMIN_PASSWORD in .env'
+        throw new Error('Define first and second ADMIN_EMAIL and ADMIN_PASSWORD in .env')
         
     }
 
@@ -28,8 +28,8 @@ try {
 const hashF = await bcrypt.hash(passwordF, 10)
 const hashS = await bcrypt.hash(passwordS, 10)
 
-await prisma.admin.create({ data: { emailF, password:hashF } })
-await prisma.admin.create({ data: { emailS, password:hashS } })
+await prisma.admin.create({ data: { email: emailF, password:hashF } })
+await prisma.admin.create({ data: { email: emailS, password:hashS } })
 
 console.log('Created admin sucessfully')
 await prisma.$disconnect()
