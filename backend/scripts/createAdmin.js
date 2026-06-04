@@ -31,6 +31,6 @@ const hashS = await bcrypt.hash(passwordS, 10)
 await prisma.admin.create({ data: { email: emailF, password:hashF } })
 await prisma.admin.create({ data: { email: emailS, password:hashS } })
 
-console.log('Created admin sucessfully')
+console.log('Created admins sucessfully')
 await prisma.$disconnect()
 
