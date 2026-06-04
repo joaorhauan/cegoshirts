@@ -213,3 +213,87 @@
   color: #3C3489;
   border: 0.5px solid #AFA9EC;
 }
+
+.tabela-desktop {
+  display: table;
+}
+
+.cards-mobile {
+  display: none;
+}
+
+.admin-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 0.5px solid var(--cinza-200);
+  gap: 12px;
+}
+
+.admin-card-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-card-nome {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--preto);
+  margin-bottom: 2px;
+  line-height: 1.4; /* Opcional: Adiciona um respiro entre as linhas quando o texto quebrar */
+}
+
+.admin-card-cliques {
+  font-size: 12px;
+  color: var(--cinza-400);
+  margin-bottom: 4px;
+}
+
+.admin-card-acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .tabela-desktop {
+    display: none;
+  }
+
+  .cards-mobile {
+    display: block;
+  }
+}
+
+@media (max-width: 640px) {
+  .tabela-desktop {
+    display: none;
+  }
+
+  .cards-mobile {
+    display: block;
+  }
+
+  .admin-conteudo {
+    padding: 16px;
+  }
+
+  .admin-nav {
+    padding: 0 16px;
+  }
+
+  .admin-titulo {
+    font-size: 13px;
+  }
+
+  .btn-primario,
+  .btn-secundario {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}

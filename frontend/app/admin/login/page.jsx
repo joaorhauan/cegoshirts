@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import api from '@/lib/api-client'
 import { saveToken } from '@/lib/auth'
 import '../admin.css'
+import Link from 'next/link'
 
 export default function Login() {
   const router = useRouter()
@@ -29,7 +30,7 @@ export default function Login() {
   return (
     <div className="login-wrapper">
       <div className="login-card">
-        <h1 className="login-titulo">Cego Shirts</h1>
+        <h1 className="login-titulo"><Link href="/">Cego Shirts</Link></h1>
 
         <div className="form-grupo">
           <label className="form-label">Email</label>
