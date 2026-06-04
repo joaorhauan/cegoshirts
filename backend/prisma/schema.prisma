@@ -14,16 +14,20 @@ datasource db {
 
 
 model Shirt {
-  id           Int      @id @default(autoincrement())
-  name         String 
-  description  String?  @db.Text
-  price        Float
-  imageUrl     String
-  soldout      Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  clicks Click[]
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?  @db.Text
+  price       Float
+  imageUrl    String
+  status      String   @default("available")
+  line        String?
+  year        Int?
+  size        String
+  condition   String
+  babylook    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  clicks      Click[]
 }
 
 model Click {

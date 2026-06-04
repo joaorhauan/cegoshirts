@@ -204,3 +204,12 @@
   color: #c00;
   margin-bottom: 12px;
 }
+
+.status-unlisted {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #f0f0ff;
+  color: #3C3489;
+  border: 0.5px solid #AFA9EC;
+}

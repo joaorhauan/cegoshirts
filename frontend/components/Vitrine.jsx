@@ -7,8 +7,9 @@ export default function Vitrine({ shirts }) {
   const [filter, setFilter] = useState('all')
 
   const filtered = shirts.filter((shirt) => {
-    if (filter === 'available') return !shirt.soldout
-    if (filter === 'soldout') return shirt.soldout
+    if (filter === 'available') return shirt.status === 'available'
+    if (filter === 'soldout') return shirt.status === 'soldout'
+    if (filter === 'unlisted') return shirt.status === 'unlisted'
     return true
   })
 
@@ -45,6 +46,12 @@ export default function Vitrine({ shirts }) {
           onClick={() => setFilter('soldout')}
         >
           Esgotadas
+        </button>
+        <button
+          className={`filtro ${filter === 'unlisted' ? 'ativo' : ''}`}
+          onClick={() => setFilter('unlisted')}
+        >
+          Em breve
         </button>
       </div>
 

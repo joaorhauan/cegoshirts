@@ -54,8 +54,8 @@ export default function Dashboard() {
                   {shirt.name}
                 </td>
                 <td>
-                  <span className={shirt.soldout ? 'status-esgotado' : 'status-disponivel'}>
-                    {shirt.soldout ? 'Esgotada' : 'Disponível'}
+                  <span className={shirt.status === 'soldout' ? 'status-esgotado' : shirt.status === 'unlisted' ? 'status-unlisted' : 'status-disponivel'}>
+                        {shirt.status === 'soldout' ? 'Esgotada' : shirt.status === 'unlisted' ? 'Em breve' : 'Disponível'}
                   </span>
                 </td>
                 <td>{shirt.totalClicks}</td>

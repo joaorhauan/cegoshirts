@@ -109,6 +109,7 @@
   aspect-ratio: 1 / 1;
   overflow: hidden;
   background: var(--cinza-100);
+  position: relative;
 }
 
 .card-img img {
@@ -180,4 +181,53 @@
   .grade {
     grid-template-columns: 1fr;
   }
+}
+
+.badge-size {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-family: var(--font-bebas);
+  font-size: 22px;
+  letter-spacing: .1em;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 3px 10px 1px;
+  border-radius: 4px;
+  pointer-events: none;
+  transition: transform .3s ease, opacity .3s ease;
+  z-index: 2;
+}
+
+.badge-unlisted {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: var(--preto);
+  color: var(--branco);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.card-linha {
+  font-size: 11px;
+  color: var(--cinza-400);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.card:hover .badge-size {
+  transform: translateY(-3px);
+  opacity: 0.75;
+}
+
+.card-preco-unlisted {
+  color: var(--cinza-400);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: .06em;
 }

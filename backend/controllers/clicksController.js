@@ -13,36 +13,38 @@ export const registerClick = async (req,res) => {
     }
 }
 
-export const listClicks = async (req,res) => {
-
-    try {
-        const shirts = await prisma.shirt.findMany({
-        orderBy: { createdAt: 'desc' }, 
-        select: {
-            id: true,
-            name: true,
-            imageUrl: true,
-            soldout: true,
-            _count: {
-                select: { clicks: true },
-            },
-        }
+export const listClicks = async (req, res) => {
+  try {
+    const shirts = await prisma.shirt.findMany({
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        name: true,
+        imageUrl: true,
+        status: true,
+        size: true,
+        line: true,
+        _count: {
+          select: { clicks: true },
+        },
+      },
     })
 
-    const result = shirts.map((c) => ({
-        id: c.id,
-        nome: c.nome,
-        imageUrl: c.imageUrl,
-        soldout: c.soldout,
-        totalClicks: c._count.clicks,
+    const result = shirts.map((s) => ({
+      id: s.id,
+      name: s.name,
+      imageUrl: s.imageUrl,
+      status: s.status,
+      size: s.size,
+      line: s.line,
+      totalClicks: s._count.clicks,
     }))
 
     res.json(result)
-
-    } catch {
-        res.status(500).json({ error: "Error listing clicks" })
-    }
-    
+  } catch (err) {
+    console.error('ERRO:', err)
+    res.status(500).json({ error: 'Internal server error' })
+  }
 }
 
 

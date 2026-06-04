@@ -8,16 +8,16 @@ cloudinary.config({
 })
 
 export const listShirts = async (req, res) => {
-    try {
-        const shirts = await prisma.shirt.findMany({
-            orderBy: { createdAt: 'desc' },
-        })
-        res.json(shirts)
-    } catch (err) {
-        console.error('ERRO:', err)
-        res.status(500).json({ error: 'Internal server error' })
-    }
-} 
+  try {
+    const shirts = await prisma.shirt.findMany({
+      orderBy: { createdAt: 'desc' },
+    })
+    res.json(shirts)
+  } catch (err) {
+    console.error('ERRO:', err)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+}
 
 export const getShirt = async (req,res) => {
     const { id } = req.params
@@ -34,7 +34,7 @@ export const getShirt = async (req,res) => {
 }
 
 export const createShirt = async (req,res) => {
-    const { name, description, price } = req.body
+    const { name, description, price, line, year, size, condition, babylook } = req.body
 
     try {
         if (!req.file) return res.status(400).json({ error: "Image required"})
@@ -53,8 +53,14 @@ export const createShirt = async (req,res) => {
                 description,
                 price: parseFloat(price),
                 imageUrl: upload.secure_url,
+                status: 'available',
+                line: line || null,
+                year: year ? parseInt(year) : null,
+                size,
+                condition, 
+                babylook: babylook === 'true' || babylook === true,
             },
-        })
+})
 
         res.status(201).json(shirt)
     } catch (err) {
@@ -65,14 +71,19 @@ export const createShirt = async (req,res) => {
 
 export const updateShirt = async (req,res) => {
     const { id } = req.params
-    const { name, description, price, soldout } = req.body
+    const { name, description, price, status, line, year, size, condition, babylook } = req.body
 
     try {
         const data = {
             ...(name && { name }),
             ...(description !== undefined && { description }),
             ...(price && { price: parseFloat(price) }),
-            ...(soldout !== undefined && { soldout: soldout === 'true' || soldout === true }),
+            ...(status && { status }),
+            ...(line !== undefined && { line }),
+            ...(year !== undefined && { year: year ? parseInt(year) : null }),
+            ...(size && { size }),
+            ...(condition && { condition }),
+            ...(babylook !== undefined && { babylook: babylook === 'true' || babylook === true }),
         }
 
        if (req.file) {
