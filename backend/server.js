@@ -20,6 +20,8 @@ app.use('/api/clicks', clicksRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/orders', ordersRoutes)
 
+app.get('/health', (req, res) => res.json({ status: 'ok' }))
+
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`)
