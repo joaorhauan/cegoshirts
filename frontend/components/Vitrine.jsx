@@ -71,7 +71,7 @@ export default function Vitrine({ shirts }) {
           Dúvidas? Fale diretamente comigo WhatsApp.
         </p>
         <a
-          href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`}
+          href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMERO}`}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-whatsapp"

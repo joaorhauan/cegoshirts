@@ -2,6 +2,7 @@
 'use client'
 import { useState } from 'react'
 import { QRCodeCanvas } from 'qrcode.react'
+import { useRouter } from 'next/navigation'
 
 function generatePixPayload({ key, name, city, value }) {
   const clean = (str) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').substring(0, 25)
@@ -33,6 +34,7 @@ export default function PixModal({ shirt, onClose }) {
   const [phone, setPhone] = useState('')
   const [copied, setCopied] = useState(false)
   const [sending, setSending] = useState(false)
+  const router = useRouter()
 
   const pixPayload = generatePixPayload({
     key: process.env.NEXT_PUBLIC_PIX_KEY,
@@ -57,29 +59,40 @@ export default function PixModal({ shirt, onClose }) {
   }
 
   const handleSendReceipt = async () => {
-  window.open(
-    `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMERO}?text=${whatsappMsg}`,
-    '_blank'
-  )
+    setSending(true) // Opcional: para evitar duplo clique
 
-  try {
+    window.open(
+      `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMERO}?text=${whatsappMsg}`,
+      '_blank'
+    )
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        shirtId: shirt.id,
-        name,
-        email,
-        phone,
-      }),
-    })
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          shirtId: shirt.id,
+          name,
+          email,
+          phone,
+        }),
+      })
 
-    console.log('resposta:', res.status)
-  } catch (err) {
-    console.error('erro ao notificar:', err)
+      if (res.ok) {
+        console.log('Pedido registrado com sucesso!')
+        // 1. Pede para o Next.js atualizar os dados da tela principal
+        router.refresh() 
+        // 2. Fecha o modal
+        onClose()
+      } else {
+        console.error('Erro na resposta:', res.status)
+      }
+    } catch (err) {
+      console.error('erro ao notificar:', err)
+    } finally {
+      setSending(false)
+    }
   }
-}
 
   const inputStyle = {
     width: '100%', height: 44, border: '0.5px solid #e0e0e0',
