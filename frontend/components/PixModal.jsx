@@ -150,7 +150,7 @@ export default function PixModal({ shirt, onClose }) {
               style={{ width: '100%', height: 44, background: '#0a0a0a', color: '#fff', borderRadius: 6, fontSize: 14, fontWeight: 500, border: 'none', cursor: 'pointer', marginTop: 20 }}
               onClick={handleGenerate}
             >
-              Gerar QR Code
+              Comprar
             </button>
             <button
               style={{ width: '100%', height: 44, background: 'transparent', color: '#a0a0a0', border: 'none', cursor: 'pointer', fontSize: 13, marginTop: 8 }}
