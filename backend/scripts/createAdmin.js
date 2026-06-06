@@ -1,8 +1,10 @@
 import bcrypt from "bcryptjs";
-import prisma from "../lib/prisma.js";
+import { getPrisma } from '../lib/prisma.js'
 import dotenv from 'dotenv';
 
 dotenv.config();
+
+const prisma = getPrisma()
 
 const emailF = process.env.ADMIN_EMAIL_F;
 const passwordF = process.env.ADMIN_PASSWORD_F;

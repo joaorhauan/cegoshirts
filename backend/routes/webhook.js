@@ -1,11 +1,12 @@
 
 import { Router } from 'express'
-import prisma from '../lib/prisma.js'
+import { getPrisma } from '../lib/prisma.js'
 import { notifyOrder } from '../lib/notify.js'
 
 const router = Router()
 
 router.post('/infinitypay', async (req, res) => {
+  const prisma = getPrisma()
   const { order_nsu, items, payer, capture_method, paid_amount } = req.body
 
   console.log('WEBHOOK INFINITYPAY:', JSON.stringify(req.body, null, 2))

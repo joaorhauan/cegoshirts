@@ -1,6 +1,7 @@
-import prisma from '../lib/prisma.js'
+import { getPrisma } from '../lib/prisma.js'
 
 export const registerClick = async (req,res) => {
+    const prisma = getPrisma()
     const { id } = req.params
 
     try {
@@ -14,6 +15,7 @@ export const registerClick = async (req,res) => {
 }
 
 export const listClicks = async (req, res) => {
+  const prisma = getPrisma()
   try {
     const shirts = await prisma.shirt.findMany({
       orderBy: { createdAt: 'desc' },
@@ -49,6 +51,7 @@ export const listClicks = async (req, res) => {
 
 
 export const clicksPerDay = async (req, res) => {
+  const prisma = getPrisma()
   const { id } = req.params
 
   try {

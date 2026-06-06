@@ -1,22 +1,18 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
 }
-
 
 model Shirt {
   id          Int      @id @default(autoincrement())
   name        String
-  description String?  @db.Text
+  description String?  
   price       Float
   imageUrl    String
   status      String   @default("available")
@@ -31,15 +27,15 @@ model Shirt {
 }
 
 model Click {
-  id Int @id @default(autoincrement())
+  id      Int      @id @default(autoincrement())
   shirtId Int
-  time DateTime @default(now())
+  time    DateTime @default(now())
 
   shirt Shirt @relation(fields: [shirtId], references: [id], onDelete: Cascade)
 }
 
 model Admin {
-  id Int @id @default(autoincrement())
-  email String @unique
+  id       Int    @id @default(autoincrement())
+  email    String @unique
   password String
 }

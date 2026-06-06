@@ -1,8 +1,9 @@
 // backend/controllers/ordersController.js
-import prisma from '../lib/prisma.js'
+import { getPrisma } from '../lib/prisma.js'
 import { notifyOrder } from '../lib/notify.js'
 
 export const createOrder = async (req, res) => {
+  const prisma = getPrisma()
   const { shirtId, name, email, phone } = req.body
 
   try {

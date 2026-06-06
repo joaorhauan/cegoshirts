@@ -1,5 +1,7 @@
+import { getPrisma } from '../lib/prisma.js'
 
 export const createCheckout = async (req, res) => {
+  const prisma = getPrisma()
   const { shirtId, name, email, phone } = req.body
 
   try {

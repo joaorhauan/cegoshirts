@@ -1,4 +1,4 @@
-import prisma from '../lib/prisma.js'
+import { getPrisma } from '../lib/prisma.js'
 import { v2 as cloudinary } from 'cloudinary'
 
 cloudinary.config({
@@ -8,6 +8,7 @@ cloudinary.config({
 })
 
 export const listShirts = async (req, res) => {
+    const prisma = getPrisma()
   try {
     const shirts = await prisma.shirt.findMany({
       orderBy: { createdAt: 'desc' },
@@ -20,6 +21,7 @@ export const listShirts = async (req, res) => {
 }
 
 export const getShirt = async (req,res) => {
+    const prisma = getPrisma()
     const { id } = req.params
     try {
         const shirt = await prisma.shirt.findUnique({
@@ -34,6 +36,7 @@ export const getShirt = async (req,res) => {
 }
 
 export const createShirt = async (req,res) => {
+    const prisma = getPrisma()
     const { name, description, price, line, year, size, condition, babylook } = req.body
 
     try {
@@ -70,6 +73,7 @@ export const createShirt = async (req,res) => {
 }
 
 export const updateShirt = async (req,res) => {
+    const prisma = getPrisma()
     const { id } = req.params
     const { name, description, price, status, line, year, size, condition, babylook } = req.body
 
@@ -110,6 +114,7 @@ export const updateShirt = async (req,res) => {
 }
 
 export const deleteShirt = async (req,res) => {
+    const prisma = getPrisma()
     const { id } = req.params
     try {
         await prisma.shirt.delete({ where: { id: Number(id) } })
