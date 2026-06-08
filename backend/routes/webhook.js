@@ -1,4 +1,4 @@
-
+// backend/routes/webhook.js
 import { Router } from 'express'
 import { getPrisma } from '../lib/prisma.js'
 import { notifyOrder } from '../lib/notify.js'
@@ -7,29 +7,40 @@ const router = Router()
 
 router.post('/infinitypay', async (req, res) => {
   const prisma = getPrisma()
-  const { order_nsu, items, payer, capture_method, paid_amount } = req.body
+  const { order_nsu, items, payer, paid_amount } = req.body
 
   console.log('WEBHOOK INFINITYPAY:', JSON.stringify(req.body, null, 2))
 
   try {
-    // pega o shirtId que salvamos no order_nsu
-    const shirtId = parseInt(order_nsu)
+    const shirtIds = String(order_nsu).split('-').map(Number)
 
-    if (shirtId) {
+    const shirts = await Promise.all(
+      shirtIds.map((id) => prisma.shirt.findUnique({ where: { id } }))
+    )
+
+    // marca todas as camisas como esgotadas e remove reserva
+    for (const shirt of shirts) {
+      if (!shirt) continue
       await prisma.shirt.update({
-        where: { id: shirtId },
-        data: { status: 'soldout' },
-      })
-
-      await notifyOrder({
-        shirtName: items?.[0]?.description || 'Camisa',
-        shirtId,
-        price: (paid_amount || 0) / 100,
-        name: payer?.name || '—',
-        email: payer?.email || '—',
-        phone: payer?.phone || '—',
+        where: { id: shirt.id },
+        data: { status: 'soldout', reservedUntil: null },
       })
     }
+
+    // remove itens do carrinho
+    await prisma.cartItem.deleteMany({
+      where: { shirtId: { in: shirtIds } },
+    })
+
+    // notifica o vendedor
+    await notifyOrder({
+      shirtName: shirts.map((s) => s?.name).join(', '),
+      shirtId: order_nsu,
+      price: (paid_amount || 0) / 100,
+      name: payer?.name || '—',
+      email: payer?.email || '—',
+      phone: payer?.phone || '—',
+    })
 
     res.status(200).json({ ok: true })
   } catch (err) {

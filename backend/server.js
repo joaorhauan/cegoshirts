@@ -11,6 +11,8 @@ import authRoutes from './routes/auth.js'
 import ordersRoutes from './routes/orders.js'
 import checkoutRoutes from './routes/checkout.js'
 import webhookRoutes from './routes/webhook.js'
+import cartRoutes from './routes/cart.js'
+import { releaseExpiredReservations } from './controllers/cartController.js'
 
 
 
@@ -26,10 +28,13 @@ app.use('/api/auth', authRoutes)
 app.use('/api/orders', ordersRoutes)
 app.use('/api/checkout', checkoutRoutes)
 app.use('/api/webhook', webhookRoutes)
+app.use('/api/cart', cartRoutes)
+
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }))
 
-console.log('TURSO_URL: ', process.env.TURSO_DATABASE_URL)
+setInterval(releaseExpiredReservations, 60 * 1000)
+
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`)

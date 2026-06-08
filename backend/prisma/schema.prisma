@@ -21,9 +21,11 @@ model Shirt {
   size        String
   condition   String
   babylook    Boolean  @default(false)
+  reservedUntil DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   clicks      Click[]
+  cartItems     CartItem[]
 }
 
 model Click {
@@ -38,4 +40,19 @@ model Admin {
   id       Int    @id @default(autoincrement())
   email    String @unique
   password String
+}
+
+model Cart {
+  id        Int        @id @default(autoincrement())
+  sessionId String     @unique
+  createdAt DateTime   @default(now())
+  items     CartItem[]
+}
+
+model CartItem {
+  id       Int    @id @default(autoincrement())
+  cartId   Int
+  shirtId  Int
+  cart     Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  shirt    Shirt  @relation(fields: [shirtId], references: [id], onDelete: Cascade)
 }

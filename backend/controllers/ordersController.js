@@ -7,32 +7,44 @@ export const createOrder = async (req, res) => {
   const { shirtId, name, email, phone } = req.body
 
   try {
-    const shirt = await prisma.shirt.findUnique({
-      where: { id: Number(shirtId) },
+    // suporta múltiplos ids separados por -
+    const shirtIds = String(shirtId).split('-').map(Number)
+
+    const shirts = await Promise.all(
+      shirtIds.map((id) => prisma.shirt.findUnique({ where: { id } }))
+    )
+
+    const notFound = shirts.some((s) => !s)
+    if (notFound) return res.status(404).json({ error: 'Shirt not found' })
+
+    // marca todas como esgotadas
+    for (const shirt of shirts) {
+      await prisma.shirt.update({
+        where: { id: shirt.id },
+        data: { status: 'soldout', reservedUntil: null },
+      })
+    }
+
+    // remove do carrinho
+    await prisma.cartItem.deleteMany({
+      where: { shirtId: { in: shirtIds } },
     })
 
-    if (!shirt) return res.status(404).json({ error: 'Shirt not found' })
+    const totalPrice = shirts.reduce((sum, s) => sum + s.price, 0)
+    const shirtNames = shirts.map((s) => s.name).join(', ')
 
-    // 1. Marca a camisa como esgotada no banco
-    await prisma.shirt.update({
-      where: { id: Number(shirtId) },
-      data: { status: 'soldout' },
-    })
-
-    // 2. Dispara a notificação por e-mail (Nodemailer)
-    // Coloquei o aviso de "PIX Manual" para o vendedor saber que precisa checar o extrato
     await notifyOrder({
-      shirtName: `${shirt.name} (PIX Manual - Conferir Conta)`,
-      shirtId: shirt.id,
-      price: Number(shirt.price),
-      name: name || 'Não informado',
-      email: email || 'Não informado',
-      phone: phone || 'Não informado',
+      shirtName: shirtNames,
+      shirtId: String(shirtId),
+      price: totalPrice,
+      name,
+      email,
+      phone,
     })
 
     res.status(201).json({ ok: true })
   } catch (err) {
-    console.error('ERRO NA CRIAÇÃO DA ORDER:', err)
+    console.error('ERRO:', err)
     res.status(500).json({ error: 'Internal server error' })
   }
 }

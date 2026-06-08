@@ -1,3 +1,4 @@
+// backend/controllers/checkoutController.js
 import { getPrisma } from '../lib/prisma.js'
 
 export const createCheckout = async (req, res) => {
@@ -5,11 +6,15 @@ export const createCheckout = async (req, res) => {
   const { shirtId, name, email, phone } = req.body
 
   try {
-    const shirt = await prisma.shirt.findUnique({
-      where: { id: Number(shirtId) },
-    })
+    // suporta múltiplos ids separados por -
+    const shirtIds = String(shirtId).split('-').map(Number)
 
-    if (!shirt) return res.status(404).json({ error: 'Shirt not found' })
+    const shirts = await Promise.all(
+      shirtIds.map((id) => prisma.shirt.findUnique({ where: { id } }))
+    )
+
+    const notFound = shirts.some((s) => !s)
+    if (notFound) return res.status(404).json({ error: 'Shirt not found' })
 
     const response = await fetch('https://api.checkout.infinitepay.io/links', {
       method: 'POST',
@@ -17,16 +22,14 @@ export const createCheckout = async (req, res) => {
       body: JSON.stringify({
         handle: process.env.INFINITYPAY_HANDLE,
         redirect_url: `${process.env.FRONTEND_URL}/obrigado`,
-        order_nsu: String(shirt.id),
+        order_nsu: String(shirtId),
         payer: { name, email, phone },
-        items: [
-            {
-            description: shirt.name,
-            quantity: 1,
-            price: Math.round(shirt.price * 100),
-            },
-        ],
-        }),
+        items: shirts.map((s) => ({
+          description: s.name,
+          quantity: 1,
+          price: Math.round(s.price * 100),
+        })),
+      }),
     })
 
     const data = await response.json()

@@ -1,32 +1,37 @@
-
+// frontend/components/CardModal.jsx
 'use client'
 import { useState } from 'react'
+import { useCart } from '@/lib/CartContext'
 
 export default function CardModal({ shirt, onClose }) {
+  const { items } = useCart()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  // se vier do carrinho usa todos os ids, senão usa o id da camisa individual
+  const shirtId = items.length > 0
+    ? items.map((i) => i.id).join('-')
+    : shirt.id
+
   const handleSubmit = async () => {
-    
+    if (!name || !email || !phone) {
+      setError('Preencha todos os campos')
+      return
+    }
     setLoading(true)
     setError('')
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          shirtId: shirt.id,
-          name,
-          email,
-          phone,
-        }),
+        body: JSON.stringify({ shirtId, name, email, phone }),
       })
       const data = await res.json()
       if (data.url) {
-        window.location.href = data.url
+        window.open(data.url, '_blank')
         onClose()
       } else {
         setError('Erro ao gerar link de pagamento')
@@ -75,8 +80,22 @@ export default function CardModal({ shirt, onClose }) {
           {shirt.name} — R$ {shirt.price.toFixed(2)}
         </p>
 
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div>
+            <label style={labelStyle}>Nome</label>
+            <input style={inputStyle} placeholder="Seu nome completo" value={name} onChange={(e) => setName(e.target.value)} />
+          </div>
+          <div>
+            <label style={labelStyle}>Email</label>
+            <input style={inputStyle} type="email" placeholder="seu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+          </div>
+          <div>
+            <label style={labelStyle}>Telefone</label>
+            <input style={inputStyle} type="tel" placeholder="(84) 99999-9999" value={phone} onChange={(e) => setPhone(e.target.value)} />
+          </div>
+        </div>
 
-       {error && (
+        {error && (
           <p style={{ fontSize: 13, color: '#c00', marginTop: 12 }}>{error}</p>
         )}
 

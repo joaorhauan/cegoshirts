@@ -1,10 +1,14 @@
+// frontend/components/Vitrine.jsx
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
 import ShirtCard from './ShirtCard'
+import CartButton from './CartButton'
+import { useCart } from '@/lib/CartContext'
 
 export default function Vitrine({ shirts }) {
   const [filter, setFilter] = useState('all')
+  const { items } = useCart()
 
   const filtered = shirts.filter((shirt) => {
     if (filter === 'available') return shirt.status === 'available'
@@ -20,6 +24,20 @@ export default function Vitrine({ shirts }) {
         <div className="nav-links">
           <a href="#colecao">Coleção</a>
           <a href="#contato">Contato</a>
+          <Link href="/checkout" style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
+            🛍️ Carrinho
+            {items.length > 0 && (
+              <span style={{
+                position: 'absolute', top: -6, right: -8,
+                background: '#0a0a0a', color: '#fff',
+                fontSize: 10, fontWeight: 500,
+                width: 16, height: 16, borderRadius: '50%',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                {items.length}
+              </span>
+            )}
+          </Link>
         </div>
       </nav>
 
@@ -29,30 +47,10 @@ export default function Vitrine({ shirts }) {
       </div>
 
       <div className="filtros">
-        <button
-          className={`filtro ${filter === 'all' ? 'ativo' : ''}`}
-          onClick={() => setFilter('all')}
-        >
-          Todas
-        </button>
-        <button
-          className={`filtro ${filter === 'available' ? 'ativo' : ''}`}
-          onClick={() => setFilter('available')}
-        >
-          Disponíveis
-        </button>
-        <button
-          className={`filtro ${filter === 'soldout' ? 'ativo' : ''}`}
-          onClick={() => setFilter('soldout')}
-        >
-          Esgotadas
-        </button>
-        <button
-          className={`filtro ${filter === 'unlisted' ? 'ativo' : ''}`}
-          onClick={() => setFilter('unlisted')}
-        >
-          Em breve
-        </button>
+        <button className={`filtro ${filter === 'all' ? 'ativo' : ''}`} onClick={() => setFilter('all')}>Todas</button>
+        <button className={`filtro ${filter === 'available' ? 'ativo' : ''}`} onClick={() => setFilter('available')}>Disponíveis</button>
+        <button className={`filtro ${filter === 'soldout' ? 'ativo' : ''}`} onClick={() => setFilter('soldout')}>Esgotadas</button>
+        <button className={`filtro ${filter === 'unlisted' ? 'ativo' : ''}`} onClick={() => setFilter('unlisted')}>Em breve</button>
       </div>
 
       <div className="grade" id="colecao">
@@ -68,7 +66,7 @@ export default function Vitrine({ shirts }) {
 
       <div id="contato" style={{ borderTop: '0.5px solid #e8e8e8', padding: '48px 32px', textAlign: 'center' }}>
         <p style={{ fontSize: 13, color: '#555', marginBottom: 16 }}>
-          Dúvidas? Fale diretamente comigo WhatsApp.
+          Dúvidas? Fale diretamente com a gente pelo WhatsApp.
         </p>
         <a
           href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMERO}`}
@@ -81,7 +79,9 @@ export default function Vitrine({ shirts }) {
         </a>
       </div>
 
-      <footer className="footer">© 2026 Cego Shirts · Natal, RN </footer>
+      <footer className="footer">© 2025 Cego Shirts · Natal, RN</footer>
+
+      <CartButton />
     </>
   )
 }
