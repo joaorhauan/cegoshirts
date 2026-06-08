@@ -35,7 +35,7 @@ export default function Dashboard() {
       <nav className="admin-nav">
         <Link href="/" className="admin-titulo">Cego Shirts</Link>
         <div className="admin-acoes">
-          <Link href="/admin/nova" className="btn-primario">+ Nova camisa</Link>
+          <Link href="/admin/new" className="btn-primario">+ Nova camisa</Link>
           <button className="btn-secundario" onClick={handleSignOut}>Sair</button>
         </div>
       </nav>
