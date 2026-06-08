@@ -21,6 +21,7 @@ export default function DetailsShirt({ params }) {
   const { addToCart, items } = useCart()
 
   const alreadyInCart = items.some((i) => i.id === shirt?.id)
+  if (!shirt) return null
   const isReservedActive = shirt.status === 'reserved' && shirt.reservedUntil && new Date(shirt.reservedUntil) > new Date()
 
   useEffect(() => {
