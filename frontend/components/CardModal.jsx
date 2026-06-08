@@ -31,7 +31,7 @@ export default function CardModal({ shirt, onClose }) {
       })
       const data = await res.json()
       if (data.url) {
-        window.open(data.url, '_blank')
+        window.location.href = data.url
         onClose()
       } else {
         setError('Erro ao gerar link de pagamento')
