@@ -8,31 +8,31 @@ export const releaseExpiredReservations = async () => {
   const prisma = getPrisma()
   const now = new Date()
 
-  const expiredItems = await prisma.cartItem.findMany({
+  // 1. Busca pelas CAMISAS vencidas (e não pelos itens de carrinho!)
+  const expiredShirts = await prisma.shirt.findMany({
     where: {
-      shirt: {
-        reservedUntil: { lt: now },
-        status: 'reserved',
-      },
+      status: 'reserved',
+      reservedUntil: { lt: now },
     },
-    include: { shirt: true },
   })
 
-  for (const item of expiredItems) {
+  for (const shirt of expiredShirts) {
+    // 2. Libera a camisa para o público
     await prisma.shirt.update({
-      where: { id: item.shirtId },
+      where: { id: shirt.id },
       data: { status: 'available', reservedUntil: null },
     })
-    await prisma.cartItem.delete({ where: { id: item.id } })
+    // 3. Deleta o item do carrinho de quem quer que seja, se existir
+    await prisma.cartItem.deleteMany({ where: { shirtId: shirt.id } })
   }
 
-  // limpa carrinhos vazios
+  // 4. Limpa carrinhos totalmente vazios
   await prisma.cart.deleteMany({
     where: { items: { none: {} } },
   })
 
-  if (expiredItems.length > 0) {
-    console.log(`${expiredItems.length} reserva(s) expirada(s) liberada(s)`)
+  if (expiredShirts.length > 0) {
+    console.log(`${expiredShirts.length} reserva(s) expirada(s) liberada(s) automaticamente!`)
   }
 }
 
