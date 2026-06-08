@@ -21,8 +21,6 @@ export default function DetailsShirt({ params }) {
   const { addToCart, items } = useCart()
 
   const alreadyInCart = items.some((i) => i.id === shirt?.id)
-  if (!shirt) return null
-  const isReservedActive = shirt.status === 'reserved' && shirt.reservedUntil && new Date(shirt.reservedUntil) > new Date()
 
   useEffect(() => {
     const load = async () => {
@@ -90,7 +88,7 @@ export default function DetailsShirt({ params }) {
             <span className="esgotado-aviso">Em breve</span>
           ) : shirt.status === 'soldout' ? (
             <span className="esgotado-aviso">Produto esgotado</span>
-          ) : isReservedActive ? (
+          ) : shirt.status === 'reserved' ? (
             <ReservedTimer reservedUntil={shirt.reservedUntil} />
           ) : (
             <>
